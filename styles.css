@@ -12,10 +12,23 @@ html, body {
     height: 30em;
     width: 30em;
     display: grid;
-    grid-template-columns: repeat(16, 1fr);
     border-style: solid;
     border-color: black;
 }
+
+.container-sub {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-style: solid;
+    border-color: black;
+}
+
+.screen {   
+    border-style: solid;
+    border-color: black;
+}
+
+
 
 .row-div {
     background-color: white;
