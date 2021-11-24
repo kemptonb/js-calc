@@ -9,6 +9,7 @@ let digit;
 let dotBool = true;
 let placeNumBool = true;
 let answer;
+let equalsOp;
 
 //button functions
 const one = document.querySelector('#one');
@@ -76,11 +77,17 @@ nine.addEventListener('click', () => {
 
 const zero = document.querySelector('#zero');
 zero.addEventListener('click', () => {
-    if (num != undefined) {
+    if(num == undefined){
+        num = 0;
+        screen.textContent = num;
+    }  else if(num[1] == "."){
+        console.log(num[0]);
         digit = "0";
         store(digit);
         screen.textContent = num;
-    }
+    }   
+   
+    
 });
 
 const dot = document.querySelector('#dot');
@@ -95,6 +102,19 @@ dot.addEventListener('click', () => {
     }
 });
 
+const plusMinus = document.querySelector('#plusMinus');
+plusMinus.addEventListener('click', () => {
+    if (num != undefined) {
+        if (num[0] == "-") {
+            num = num.slice(1);
+            screen.textContent = num;
+        } else {
+            num = "-" + num;
+            screen.textContent = num;
+        }
+    }
+});
+
 const clear = document.querySelector('#clear');
 clear.addEventListener('click', () => {
     screen.textContent = 0;
@@ -104,48 +124,59 @@ clear.addEventListener('click', () => {
     num = undefined;
     digit = undefined;
     dotBool = true;
+    let placeNumBool = true;
     answer = undefined;
+    equalsOp = undefined;
 });
 
 const times = document.querySelector('#times');
 times.addEventListener('click', () => {
     placeNum();
-    operator = "*";
-    console.log(operator);
-    if (Boolean(placeNumBool)){
-        answer = parseInt(a) * parseInt(b);
-        screen.textContent = answer;
+    equalsOp = "*";
+    if (Boolean(placeNumBool) && b != undefined) {
+        operator = "*";
+        operate(operator);
     }
-    
+
 });
 
 const divide = document.querySelector('#divide');
 divide.addEventListener('click', () => {
     placeNum();
-    operator = "/";
-    console.log(operator);
+    equalsOp = "/";
+    if (Boolean(placeNumBool) && b != undefined) {
+        operator = "/";
+        operate(operator);
+    }
 });
 
 const plus = document.querySelector('#plus');
 plus.addEventListener('click', () => {
-    placeNum();
-    operator = "+";
-    console.log(operator);
+    placeNum(); 
+    equalsOp = "+";
+    if (Boolean(placeNumBool) && b != undefined) {
+        operator = "+";
+        operate(operator);
+    }
 });
 
 
 const minus = document.querySelector('#minus');
 minus.addEventListener('click', () => {
     placeNum();
-    operator = "-";
-    console.log(operator);
+    equalsOp = "-";
+    if (Boolean(placeNumBool) && b != undefined) {
+        return operator = "-";
+        operate(operator);
+    }
 });
 
 const equals = document.querySelector('#equals');
 equals.addEventListener('click', () => {
-    console.log("a: " + a);
-    console.log("b: " + b);
-    console.log(placeNumBool);
+    placeNum();
+    if (Boolean(placeNumBool) && b != undefined) {
+        operate(equalsOp);
+    }
 });
 
 
@@ -153,25 +184,42 @@ equals.addEventListener('click', () => {
 
 
 //operate function
-function operate() {
+function operate(oper) {
     //make switch for opperator execute?
+    switch (oper) {
+        //math operators
+        case '*':
+            answer = parseInt(a) * parseInt(b);
+            screen.textContent = answer;
+            a = answer;
+            b = undefined;
+            num = undefined;
+            break;
 
-    //math operators
-    function mult(a, b) {
-        return a * b;
-    }
+        case '/':
+            answer = parseInt(a) / parseInt(b);
+            screen.textContent = answer;
+            a = answer;
+            b = undefined;
+            num = undefined;
+            break;
 
-    function div(a, b) {
-        return a / b;
-    }
+        case '+':
+            answer = parseInt(a) + parseInt(b);
+            screen.textContent = answer;
+            a = answer;
+            b = undefined;
+            num = undefined;
+            break;
 
-    function add(a, b) {
-        return a + b;
-    }
-
-    function sub(a, b) {
-        return a - b;
-    }
+        case '-':
+            answer = parseInt(a) - parseInt(b);
+            screen.textContent = answer;
+            a = answer;
+            b = undefined;
+            num = undefined;
+            break;
+    }//end switch
 
 }//end operate
 
@@ -185,14 +233,15 @@ function store(digit) {
     }
 }
 
-function placeNum(){
-    if(a == undefined){
-    a = num;
-    num = undefined;
-    screen.textContent = 0;
-    placeNumBool = false;
-    }else if (b == undefined){
+
+function placeNum() {
+    if (a == undefined) {
+        a = num;
+        num = undefined;
+        placeNumBool = false;
+    } else if (b == undefined) {
         b = num;
         placeNumBool = true;
     }
 }
+
