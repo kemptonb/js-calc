@@ -16,6 +16,15 @@ html, body {
     border-color: black;
 }
 
+.container2 {
+    height: 7.25em;
+    width: 30em;
+    display: grid;
+    border-style: solid;
+    border-color: black;
+    border-bottom: none;
+}
+
 .container-sub {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -23,9 +32,15 @@ html, body {
     border-color: black;
 }
 
-.screen {   
+.container-sub div:hover {
+    background-color: rgb(247, 241, 241);
+}
+
+.screen {
+    display: grid;
     border-style: solid;
     border-color: black;
+    border-bottom: none;
 }
 
 
@@ -35,4 +50,8 @@ html, body {
     border-style: solid;
     border-color: black;
     border-width:thin;  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }   
