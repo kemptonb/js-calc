@@ -75,44 +75,82 @@ nine.addEventListener('click', () => {
     screen.textContent = num;
 });
 
+const percent = document.querySelector('#percent');
+percent.addEventListener('click', () => {
+    console.log("a " + a);
+    console.log("b " + b);
+    console.log("num " + num);
+});
+
 const zero = document.querySelector('#zero');
 zero.addEventListener('click', () => {
-    if(num == undefined){
-        num = 0;
-        screen.textContent = num;
-    }  else if(num[1] == "."){
-        console.log(num[0]);
-        digit = "0";
-        store(digit);
-        screen.textContent = num;
-    }   
-   
-    
+
+    if (a == undefined && b == undefined) {
+        if (num == undefined) {
+            num = "0";
+            screen.textContent = num;
+        } else if (num == 0 && dotBool === false) {
+            digit = "0";
+            store(digit);
+            screen.textContent = num;
+        } else if (num[0] > 0 || num[1] > 0) {
+            digit = "0";
+            store(digit);
+            screen.textContent = num;
+        }
+    } else if (typeof parseInt(a) == "number" && typeof parseInt(num) == "number") {
+        if (num == undefined) {
+            num = "0";
+            screen.textContent = num;
+        } else if (num == 0 && dotBool === false) {
+            digit = "0";
+            store(digit);
+            screen.textContent = num;
+        } else if (num[0] > 0 || num[1] > 0) {
+            digit = "0";
+            store(digit);
+            screen.textContent = num;
+        }
+    }
+
 });
 
 const dot = document.querySelector('#dot');
 dot.addEventListener('click', () => {
-    if (num != undefined) {
-        if (Boolean(dotBool)) {
-            digit = ".";
+    if (Boolean(dotBool)) {
+        if (a == undefined && b == undefined && num == undefined) {
+            digit = "0.";
             store(digit);
             screen.textContent = num;
             dotBool = false;
+        } else if (b == undefined && num == 0) {
+            digit = "0.";
+            store(digit);
+            screen.textContent = num;
+            dotBool = false;
+        } else if (a == undefined && b == undefined && num != undefined) {
+            verifyDot(num);
+            screen.textContent = num;
+        } else if (a != undefined && num != undefined) {
+            verifyDot(num);
+            screen.textContent = num;
         }
     }
 });
 
 const plusMinus = document.querySelector('#plusMinus');
 plusMinus.addEventListener('click', () => {
-    if (num != undefined) {
-        if (num[0] == "-") {
-            num = num.slice(1);
-            screen.textContent = num;
-        } else {
-            num = "-" + num;
-            screen.textContent = num;
-        }
+    if (a == undefined && b == undefined && num != undefined) {
+        num = verifyPlusMinus(num);
+        screen.textContent = num;
+    } else if (a != undefined && num == undefined) {
+        a = verifyPlusMinus(a);
+        screen.textContent = a;
+    } else if (a != undefined && num != undefined) {
+        num = verifyPlusMinus(num);
+        screen.textContent = num;
     }
+
 });
 
 const clear = document.querySelector('#clear');
@@ -132,31 +170,45 @@ clear.addEventListener('click', () => {
 const times = document.querySelector('#times');
 times.addEventListener('click', () => {
     placeNum();
-    equalsOp = "*";
-    if (Boolean(placeNumBool) && b != undefined) {
+    if (equalsOp != undefined) {
         operator = "*";
-        operate(operator);
+        operate(equalsOp);
+    } else {
+        equalsOp = "*";
+        if (Boolean(placeNumBool) && b != undefined) {
+            operator = "*";
+            operate(operator);
+        }
     }
-
 });
 
 const divide = document.querySelector('#divide');
 divide.addEventListener('click', () => {
     placeNum();
-    equalsOp = "/";
-    if (Boolean(placeNumBool) && b != undefined) {
+    if (equalsOp != undefined) {
         operator = "/";
-        operate(operator);
+        operate(equalsOp);
+    } else {
+        equalsOp = "/";
+        if (Boolean(placeNumBool) && b != undefined) {
+            operator = "/";
+            operate(operator);
+        }
     }
 });
 
 const plus = document.querySelector('#plus');
 plus.addEventListener('click', () => {
-    placeNum(); 
-    equalsOp = "+";
-    if (Boolean(placeNumBool) && b != undefined) {
+    placeNum();
+    if (equalsOp != undefined) {
         operator = "+";
-        operate(operator);
+        operate(equalsOp);
+    } else {
+        equalsOp = "+";
+        if (Boolean(placeNumBool) && b != undefined) {
+            operator = "+";
+            operate(operator);
+        }
     }
 });
 
@@ -164,10 +216,15 @@ plus.addEventListener('click', () => {
 const minus = document.querySelector('#minus');
 minus.addEventListener('click', () => {
     placeNum();
-    equalsOp = "-";
-    if (Boolean(placeNumBool) && b != undefined) {
-        return operator = "-";
-        operate(operator);
+    if (equalsOp != undefined) {
+        operator = "-";
+        operate(equalsOp);
+    } else {
+        equalsOp = "-";
+        if (Boolean(placeNumBool) && b != undefined) {
+            return operator = "-";
+            operate(operator);
+        }
     }
 });
 
@@ -179,17 +236,13 @@ equals.addEventListener('click', () => {
     }
 });
 
-
-
-
-
 //operate function
 function operate(oper) {
     //make switch for opperator execute?
     switch (oper) {
         //math operators
         case '*':
-            answer = parseInt(a) * parseInt(b);
+            answer = parseFloat(a) * parseFloat(b);
             screen.textContent = answer;
             a = answer;
             b = undefined;
@@ -197,15 +250,29 @@ function operate(oper) {
             break;
 
         case '/':
-            answer = parseInt(a) / parseInt(b);
-            screen.textContent = answer;
-            a = answer;
-            b = undefined;
-            num = undefined;
-            break;
+            if (parseFloat(b).toFixed(10) == 0) {
+                screen.textContent = "Error";
+                a = undefined;
+                b = undefined;
+                operator = undefined;
+                num = undefined;
+                digit = undefined;
+                dotBool = true;
+                let placeNumBool = true;
+                answer = undefined;
+                equalsOp = undefined;
+                    break;
+            } else {
+                answer = parseFloat(a) / parseFloat(b);
+                screen.textContent = answer;
+                a = answer;
+                b = undefined;
+                num = undefined;
+                break;
+            }
 
         case '+':
-            answer = parseInt(a) + parseInt(b);
+            answer = parseFloat(a) + parseFloat(b);
             screen.textContent = answer;
             a = answer;
             b = undefined;
@@ -213,14 +280,14 @@ function operate(oper) {
             break;
 
         case '-':
-            answer = parseInt(a) - parseInt(b);
+            answer = parseFloat(a) - parseFloat(b);
             screen.textContent = answer;
             a = answer;
             b = undefined;
             num = undefined;
             break;
     }//end switch
-
+    equalsOp = operator;
 }//end operate
 
 
@@ -228,6 +295,8 @@ function store(digit) {
     if (num == undefined) {
         return num = digit;
 
+    } else if (num == 0 && dotBool === true) {
+        return num = digit;
     } else {
         return num += digit;
     }
@@ -239,9 +308,32 @@ function placeNum() {
         a = num;
         num = undefined;
         placeNumBool = false;
+        dotBool = true;
     } else if (b == undefined) {
         b = num;
         placeNumBool = true;
     }
 }
+
+function verifyPlusMinus(x) {
+    if (x[0] == "-") {
+        return x = x.slice(1);
+    } else {
+        return x = "-" + x;
+    }
+}
+
+function verifyDot(x) {
+    if (x != undefined && x != 0 && dotBool === true) {
+        if (Boolean(dotBool)) {
+            digit = ".";
+            store(digit);
+            //screen.textContent = x;
+            dotBool = false;
+        }
+    }
+}
+
+
+
 
