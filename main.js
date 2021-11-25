@@ -1,6 +1,8 @@
+//start screen
 const screen = document.getElementById("screen");
 screen.textContent = 0;
 
+//global vars at set to default
 let a;
 let b;
 let operator;
@@ -11,7 +13,7 @@ let placeNumBool = true;
 let answer;
 let equalsOp;
 
-//button functions
+//button functions (0-9, operators, decimal, +/-, clear, sqrt)
 const one = document.querySelector('#one');
 one.addEventListener('click', () => {
     digit = "1";
@@ -77,9 +79,16 @@ nine.addEventListener('click', () => {
 
 const percent = document.querySelector('#percent');
 percent.addEventListener('click', () => {
-    console.log("a " + a);
-    console.log("b " + b);
-    console.log("num " + num);
+    if (a == undefined && b == undefined && num != undefined) {
+        num = num / 100;
+        screen.textContent = num;
+    } else if (a != undefined && num != undefined) {
+        num = num / 100;
+        screen.textContent = num;
+    }   else if (a != undefined && num == undefined) {
+        a = a / 100;
+        screen.textContent = a;
+    } 
 });
 
 const zero = document.querySelector('#zero');
@@ -228,6 +237,20 @@ minus.addEventListener('click', () => {
     }
 });
 
+const root = document.querySelector('#root');
+root.addEventListener('click', () => {
+        if (a == undefined && b == undefined && num != undefined) {
+            num = Math.sqrt(num);
+            screen.textContent = num;
+        } else if (a != undefined && num != undefined) {
+            num = Math.sqrt(num);
+            screen.textContent = num;
+        }   else if (a != undefined && num == undefined) {
+            a = Math.sqrt(a);
+            screen.textContent = a;
+        } 
+});
+
 const equals = document.querySelector('#equals');
 equals.addEventListener('click', () => {
     placeNum();
@@ -236,73 +259,80 @@ equals.addEventListener('click', () => {
     }
 });
 
-//operate function
+//operate function (takes info from operator button function and stored vars to compute answer)
 function operate(oper) {
     //make switch for opperator execute?
-    switch (oper) {
-        //math operators
-        case '*':
-            answer = parseFloat(a) * parseFloat(b);
-            screen.textContent = answer;
-            a = answer;
-            b = undefined;
-            num = undefined;
-            break;
-
-        case '/':
-            if (parseFloat(b).toFixed(10) == 0) {
-                screen.textContent = "Error";
-                a = undefined;
-                b = undefined;
-                operator = undefined;
-                num = undefined;
-                digit = undefined;
-                dotBool = true;
-                let placeNumBool = true;
-                answer = undefined;
-                equalsOp = undefined;
-                    break;
-            } else {
-                answer = parseFloat(a) / parseFloat(b);
+    if (a != undefined && b != undefined) {
+        switch (oper) {
+            //math operators
+            case '*':
+                answer = parseFloat(a) * parseFloat(b);
                 screen.textContent = answer;
                 a = answer;
                 b = undefined;
                 num = undefined;
                 break;
-            }
 
-        case '+':
-            answer = parseFloat(a) + parseFloat(b);
-            screen.textContent = answer;
-            a = answer;
-            b = undefined;
-            num = undefined;
-            break;
+            case '/':
+                //if sets float max to 20 and looks for 0s when using div operator
+                if (parseFloat(b).toFixed(20) == 0) {
+                    screen.textContent = "Error";
+                    a = undefined;
+                    b = undefined;
+                    operator = undefined;
+                    num = undefined;
+                    digit = undefined;
+                    dotBool = true;
+                    let placeNumBool = true;
+                    answer = undefined;
+                    equalsOp = undefined;
+                    break;
+                } else {
+                    answer = parseFloat(a) / parseFloat(b);
+                    screen.textContent = answer;
+                    a = answer;
+                    b = undefined;
+                    num = undefined;
+                    break;
+                }
 
-        case '-':
-            answer = parseFloat(a) - parseFloat(b);
-            screen.textContent = answer;
-            a = answer;
-            b = undefined;
-            num = undefined;
-            break;
-    }//end switch
+            case '+':
+                answer = parseFloat(a) + parseFloat(b);
+                screen.textContent = answer;
+                a = answer;
+                b = undefined;
+                num = undefined;
+                break;
+
+            case '-':
+                answer = parseFloat(a) - parseFloat(b);
+                screen.textContent = answer;
+                a = answer;
+                b = undefined;
+                num = undefined;
+                break;
+
+        }//end switch
+    }//end if sentinal
     equalsOp = operator;
 }//end operate
 
 
+//aux functions suplementing main functions
+
 function store(digit) {
     if (num == undefined) {
         return num = digit;
-
     } else if (num == 0 && dotBool === true) {
         return num = digit;
     } else {
-        return num += digit;
-    }
+        if (num.length < 20) {
+            return num += digit;
+        }//num.length screen length restriction set to 20
+    }//end num.length screen restrict
 }
 
-
+//alternates data between 3 vars
 function placeNum() {
     if (a == undefined) {
         a = num;
@@ -315,6 +345,7 @@ function placeNum() {
     }
 }
 
+//removes or adds neg symbol
 function verifyPlusMinus(x) {
     if (x[0] == "-") {
         return x = x.slice(1);
@@ -323,6 +354,7 @@ function verifyPlusMinus(x) {
     }
 }
 
+//checks for decimal
 function verifyDot(x) {
     if (x != undefined && x != 0 && dotBool === true) {
         if (Boolean(dotBool)) {
@@ -333,7 +365,3 @@ function verifyDot(x) {
         }
     }
 }
-
-
-
-
