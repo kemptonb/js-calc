@@ -34,7 +34,7 @@ Sorting vars, 0s, and decimals took the longest. I had to make sure my condition
 
 Finally, I made the sqrt and percent operations work. 
 
-Tied project up with a little css. Grayscale -- I prefer brutalist design. Voilà.
+Tied project up with a little CSS. Grayscale -- I prefer brutalist design. Voilà.
 
 
 
