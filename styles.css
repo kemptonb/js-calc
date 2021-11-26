@@ -33,7 +33,7 @@ html, body {
 }
 
 .container-sub div:hover {
-    background-color: rgb(253, 249, 249);
+    background: rgb(210,210,210) !important;  
 }
 
 #screen {
@@ -68,4 +68,16 @@ div:hover {
     -ms-user-select: none;
     user-select: none;
     text-decoration: none;
+}
+
+#divide, #times, #plus, #minus {
+    background-color:rgb(190,190,190);
+}
+
+#percent, #plusMinus, #clear {
+    background-color: rgb(230,230,230);
+}
+
+#equals {
+    background-color: 	rgb(140,140,140);
 }
